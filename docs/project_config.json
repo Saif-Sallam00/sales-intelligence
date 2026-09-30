@@ -1,0 +1,81 @@
+{
+  "product_name_working": "Sales Team Performance & Pipeline Intelligence SaaS",
+  "revision": 2,
+  "primary_user": "Sales Manager",
+  "secondary_user": "Sales Rep",
+  "architecture": {
+    "frontend_and_server": "Next.js",
+    "database_auth": "Supabase/PostgreSQL",
+    "hosting": "Vercel",
+    "style": "Modular monolith",
+    "grid_library": "react-data-grid",
+    "metrics_module": "lib/metrics",
+    "separate_backend": false,
+    "ai_api": false,
+    "mcp": "Read-only, manager-only, after core MVP"
+  },
+  "roles": [
+    "manager",
+    "rep"
+  ],
+  "role_model": {
+    "rep": "read/write own leads and activities only",
+    "manager": "organization-wide read-only",
+    "delete": "not implemented for any role",
+    "signup": "manual account creation, no self-service"
+  },
+  "organization_defaults": {
+    "timezone": "Africa/Cairo",
+    "currency": "EGP",
+    "working_days": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"]
+  },
+  "pipeline_stages": [
+    { "position": 1, "name": "New", "terminal": false },
+    { "position": 2, "name": "Contact Attempted", "terminal": false },
+    { "position": 3, "name": "Follow Up", "terminal": false },
+    { "position": 4, "name": "Meeting", "terminal": false },
+    { "position": 5, "name": "Ongoing", "terminal": false },
+    { "position": 6, "name": "Closed", "terminal": true },
+    { "position": 7, "name": "Cancelled", "terminal": true }
+  ],
+  "stage_scope": "per_organization",
+  "outcomes": [
+    "Open",
+    "Won",
+    "Lost",
+    "Disqualified",
+    "Unreachable"
+  ],
+  "activity_types": [
+    "Call",
+    "Message",
+    "LinkedIn Outreach",
+    "WhatsApp",
+    "Email",
+    "Follow-Up",
+    "Meeting",
+    "Other"
+  ],
+  "metric_rules": {
+    "lead_date_field": "lead_date",
+    "created_at_usage": "audit_only_never_in_metrics",
+    "win_rate": "cohort: leads created in period (by lead_date) whose current outcome is Won",
+    "won": "leads whose outcome changed to Won in period, from lead_outcome_history",
+    "meetings": "distinct leads entering Meeting stage in period, from lead_stage_history",
+    "meeting_activities": "count of Meeting-type activities; rep breakdown only, never a manager KPI"
+  },
+  "testing": {
+    "policies": "pgTAP via supabase test db, written in EPIC 3, run in CI",
+    "journeys": "Playwright",
+    "metrics": "unit tests against supabase/seed/fixtures.sql"
+  },
+  "principles": [
+    "Familiar frontend, clean backend",
+    "Core SaaS useful without AI",
+    "AI reads trusted metrics and does not modify data",
+    "One metric, one implementation, in lib/metrics",
+    "One word, one meaning",
+    "No overengineering",
+    "Tenant isolation from day one"
+  ]
+}
